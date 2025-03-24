@@ -1,31 +1,12 @@
 # Load and run the model:
 
-import vllm 
-import requests
-import resource
+from transformers import pipeline
+from PIL import Image
 
-#vllm serve "meta-llama/Llama-3.2-11B-Vision-Instruct"
+pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-large")
 
-url = "http://localhost:8000/v1/chat/completions"
-headers = {"Content-Type": "application/json"}
-data = {
-    "model": "meta-llama/Llama-3.2-11B-Vision-Instruct",
-    "messages": [
-        {
-            "role": "user",
-            "content": "Describe this image in one sentence. Image URL: https://cdn.britannica.com/61/93061-050-99147DCE/Statue-of-Liberty-Island-New-York-Bay.jpg"
-        }
-    ]
-}
+image_path = "C:/Users/Lenovo/OneDrive/Desktop/Highlevel.png"
+image = Image.open(image_path)
 
-# Make the POST request
-response = requests.post(url, json=data, headers=headers)
-
-# Print the response
-if response.status_code == 200:
-    print("Response from server:")
-    print(response.json())
-else:
-    print(f"Error: {response.status_code}")
-    print(response.text)
-
+caption = pipe(image)
+print(caption)  
